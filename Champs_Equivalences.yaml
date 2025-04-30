@@ -1,0 +1,16 @@
+# ──────────────────────────────────────────────
+# Config AutoScolarité v1.0
+#   Remplacements des placeholders PDF
+# ──────────────────────────────────────────────
+
+# Informations sur l'élève
+"[ELEVE_NOM]": "DUPONT"                    # Nom de famille
+"[ELEVE_PRENOM]": "Pierre"                 # Prénom
+"[ELEVE_DATE_NAISSANCE]": "25/12/2004"     # JJ/MM/AAAA
+"[ELEVE_NUM_SECU]": "19878451201908"       # 13 chiffres
+
+# Informations du document
+"[DOC_DATE_SIGNATURE]": "30/04/2025"       # Date de signature
+"[RESPONSABLE_SIGNATURE]": "Jean Dupont"   # Responsable légal
+
+# Vous pouvez ajouter d'autres paires clé-valeur ci-dessous…
