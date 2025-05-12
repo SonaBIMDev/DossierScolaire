@@ -31,7 +31,8 @@ def prompt_if_missing(prompt_text: str) -> str:
         val = input(prompt_text).strip()
         if val:
             return val
-        print("⚠️ Valeur requise.")
+        print("⚠️ Valeur requise. Test")
+
 
 def replace_text_in_pdf(input_path: Path, search_text: str, replace_text: str) -> Path:
     """
