@@ -2,26 +2,25 @@
 import argparse
 from pathlib import Path
 import sys
-
 import fitz  # PyMuPDF
 
 def select_pdf_via_dialog():
     print("Veuillez sélectionner votre fichier PDF…")
     try:
         import tkinter as tk
-        from tkinter.filedialog import askopenfilename
+        from tkinter.filedialog import askopenfilenames
 
         root = tk.Tk()
         root.withdraw()
-        path = askopenfilename(
-            title="Sélectionnez un fichier PDF",
+        paths = askopenfilenames(
+            title="Sélectionnez un ou plusieurs fichiers PDF",
             filetypes=[("Fichiers PDF", "*.pdf")],
         )
         root.destroy()
-        if not path:
+        if not paths:
             print("Aucun fichier sélectionné. Fin du programme.")
             sys.exit(1)
-        return Path(path)
+        return [Path(path) for path in paths]
     except ImportError:
         print("Tkinter non disponible.", file=sys.stderr)
         sys.exit(1)
@@ -31,16 +30,9 @@ def prompt_if_missing(prompt_text: str) -> str:
         val = input(prompt_text).strip()
         if val:
             return val
-        print("⚠️ Valeur requise. Test")
+        print("⚠️ Valeur requise. Réessayez.")
 
-
-def replace_text_in_pdf(input_path: Path, search_text: str, replace_text: str) -> Path:
-    """
-    Masque chaque placeholder par un rectangle blanc de la largeur d'origine,
-    puis y dessine le texte de remplacement en réduisant la taille de police
-    pour qu'il rentre exactement dans cette largeur.
-    """
-    doc = fitz.open(str(input_path))
+def replace_text_in_pdf(doc, search_text: str, replace_text: str):
     font = fitz.Font(fontname="helv")  # Helvetica
     replaced = False
 
@@ -84,10 +76,6 @@ def replace_text_in_pdf(input_path: Path, search_text: str, replace_text: str) -
 
     if not replaced:
         print("⚠️ Aucun texte trouvé à remplacer.")
-    out_path = input_path.with_name(input_path.stem + "-Modified" + input_path.suffix)
-    doc.save(str(out_path))
-    return out_path
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -95,27 +83,34 @@ def main():
     )
     parser.add_argument("pdf_path", type=Path, nargs="?",
                         help="(optionnel) Chemin vers le PDF")
-    parser.add_argument("search_text", nargs="?",
-                        help="(optionnel) Texte à trouver (ex. [ELEVE_NOM])")
-    parser.add_argument("replace_text", nargs="?",
-                        help="(optionnel) Texte de remplacement")
     args = parser.parse_args()
 
-    # Sélection du PDF
+    # Sélection des PDFs
     if args.pdf_path:
-        pdf_file = args.pdf_path
-        if not pdf_file.is_file():
-            print(f"❌ Le fichier {pdf_file} n'existe pas.")
+        pdf_files = [args.pdf_path]
+        if not pdf_files[0].is_file():
+            print(f"❌ Le fichier {pdf_files[0]} n'existe pas.")
             sys.exit(1)
     else:
-        pdf_file = select_pdf_via_dialog()
+        pdf_files = select_pdf_via_dialog()
 
-    # Saisie interactive du search et replace si manquants
-    search = args.search_text or prompt_if_missing("Entrez le texte à rechercher : ")
-    replace = args.replace_text or prompt_if_missing("Entrez le texte de remplacement : ")
+    # Charger les documents PDF
+    docs = [fitz.open(str(pdf_file)) for pdf_file in pdf_files]
 
-    out_pdf = replace_text_in_pdf(pdf_file, search, replace)
-    print(f"\n✅ Fichier modifié enregistré sous :\n   {out_pdf}")
+    while True:
+        search = prompt_if_missing("Entrez le texte à rechercher (ou 'stop' pour arrêter) : ")
+        if search.lower() == 'stop':
+            break
+        replace = prompt_if_missing("Entrez le texte de remplacement : ")
+
+        for doc in docs:
+            replace_text_in_pdf(doc, search, replace)
+
+    # Enregistrer les documents modifiés
+    for doc, pdf_file in zip(docs, pdf_files):
+        out_pdf = pdf_file.with_name(f"{pdf_file.stem}-Modified{pdf_file.suffix}")
+        doc.save(str(out_pdf))
+        print(f"\n✅ Fichier modifié enregistré sous :\n   {out_pdf}")
 
 if __name__ == "__main__":
     main()
