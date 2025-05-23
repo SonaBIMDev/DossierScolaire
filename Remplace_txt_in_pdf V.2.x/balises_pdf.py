@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import re
 import sys
 import tkinter as tk
@@ -6,7 +7,7 @@ from pathlib import Path
 from tkinter.filedialog import askopenfilenames
 
 def select_pdf():
-    print("Veuillez sélectionner votre fichier PDF…")
+    print("Veuillez sélectionner votre ou vos fichier PDF…")
     try:
         root = tk.Tk()
         root.withdraw()
