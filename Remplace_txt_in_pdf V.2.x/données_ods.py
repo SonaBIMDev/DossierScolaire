@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import tkinter as tk
+from datetime import datetime
 from tkinter import filedialog
 from odf.text import P
 from odf.opendocument import load
@@ -7,19 +8,18 @@ from odf.table import Table, TableRow, TableCell
 
 # Fonction pour sélectionner un fichier .ods
 def select_doc_file():
+    print("Veuillez sélectionner un fichier ODS")
     root = tk.Tk()
     root.withdraw()
     file_ods_path = filedialog.askopenfilename(
-        title="Sélectionnez un fichier .ods",
+        title="Veuillez sélectionnez un fichier ODS",
         filetypes=[("Fichier ODS", "*.ods")]
     )
     if file_ods_path:
-        print(f"Fichier sélectionné : {file_ods_path}")
-    else:
-        print("Aucun fichier sélectionné")
+        print(f"➔  Chemin du fichier ODS sélectionné : {file_ods_path}")
     return file_ods_path
 
-# Fonction pour lire les informations dans le fichier .ods
+# Fonction pour lire les informations sur le fichier .ods
 def view_in_doc(file_ods_path):
     if not file_ods_path:
         return {}
@@ -34,7 +34,7 @@ def view_in_doc(file_ods_path):
                 if len(cells) >= 2:
                     variable_cell = cells[0]
                     value_cells = cells[1]
-                    # ne regarde que les deux première colones 
+                    # Ne regarde que les deux premières colonnes
 
                     # Extraction du texte des paragraphes
                     variable_paragraphs = variable_cell.getElementsByType(P)
@@ -56,14 +56,11 @@ def view_in_doc(file_ods_path):
                     mapping[variable] = value
         return mapping
     except Exception as e:
-        print(f"Erreur lors de la lecture du fichier : {e}")
+        print(f"❌​ Erreur lors de la lecture du fichier ODS : {e}")
         return {}
 
-# Sélectionne le fichier .ods
-file_ods_path = select_doc_file()
 
-# Lit les informations dans le fichier .ods
-mapping = view_in_doc(file_ods_path)
-
-# Affiche les résultats
-print("Contenu du fichier .ods :", mapping)
+if not file_ods_path:
+    print("❌​ ​Aucun fichier ODS sélectionné")
+if file_ods_path and mapping:
+    print("🔍​ Contenu du fichier ODS :", mapping)
