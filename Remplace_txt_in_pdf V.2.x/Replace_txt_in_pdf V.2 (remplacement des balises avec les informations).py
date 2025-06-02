@@ -21,7 +21,7 @@ def select_pdf_via_dialog():
         if not paths:
             print("❌​ Aucun fichier sélectionné")
             sys.exit(1)
-        return [Path(path) for path in paths]
+        return [Path(path) for path in paths] 
     except ImportError:
         print("❌​ Tkinter non disponible", file=sys.stderr)
         sys.exit(1)
