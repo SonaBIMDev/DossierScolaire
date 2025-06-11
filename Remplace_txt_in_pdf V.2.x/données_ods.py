@@ -59,6 +59,8 @@ def view_in_doc(file_ods_path):
         print(f"❌​ Erreur lors de la lecture du fichier ODS : {e}")
         return {}
 
+file_ods_path = select_doc_file()
+mapping = view_in_doc(file_ods_path)
 
 if not file_ods_path:
     print("❌​ ​Aucun fichier ODS sélectionné")

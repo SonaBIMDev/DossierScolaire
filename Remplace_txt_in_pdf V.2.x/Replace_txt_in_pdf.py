@@ -47,11 +47,16 @@ def replace_text_in_pdf(file_pdf_paths, balises_variables):
                     text_width = font.text_length(value, fontsize)
                     box_width = inst.width
 
-                    # 3) Position verticale centrée
+                    # 3) Si ça déborde, on réduit la taille
+                    if text_width > box_width:
+                        fontsize = fontsize * box_width / text_width
+
+                    
+                    # 4) Position verticale centrée
                     x = inst.x0
                     y = inst.y0 + (inst.height + fontsize) / 2
 
-                    # 4) On écrit le texte
+                    # 5) On écrit le texte
                     page.insert_text(
                         (x, y),
                         value,
