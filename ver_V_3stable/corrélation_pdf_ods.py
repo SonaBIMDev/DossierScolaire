@@ -6,6 +6,7 @@ def search_usable_variables(date):
     balises_variables = {}
 
     for var in balises:
+        print (var)
         var_without_spaces = var.replace(" ","")
         for keys in mapping.keys():
 
