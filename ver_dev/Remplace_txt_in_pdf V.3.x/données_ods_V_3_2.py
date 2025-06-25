@@ -36,9 +36,9 @@ def view_in_doc(file_ods_path):
             # Parcourir chaque ligne de la table
             for row in table.getElementsByType(TableRow):
                 cells = row.getElementsByType(TableCell)
-                if len(cells) >= 2:
-                    variable_cell = cells[0]
-                    value_cells = cells[1]
+                if len(cells) >= 3:
+                    value_cells = cells[0]
+                    variable_cell = cells[2]
                     # Extraire le texte des paragraphes de la cellule de variable
                     variable_paragraphs = variable_cell.getElementsByType(P)
                     # Extraire le texte des paragraphes de la cellule de valeur

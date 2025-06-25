@@ -25,7 +25,6 @@ def select_pdf():
         # Vérifier si des fichiers ont été sélectionnés
         if not paths:
             print("❌ Aucun(s) fichier(s) PDF sélectionné(s)")
-            sys.exit(1)  # Quitter le programme avec un code d'erreur
 
         # Retourner les chemins des fichiers sélectionnés sous forme de Path
         return [Path(path) for path in paths]

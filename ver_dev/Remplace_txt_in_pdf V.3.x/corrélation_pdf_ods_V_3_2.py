@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from datetime import datetime
-from balises_pdf_V_3_1 import extract_variables_in_pdf, select_pdf
-from données_ods_V_3_1 import view_in_doc, select_doc_file
+from balises_pdf_V_3_2 import extract_variables_in_pdf, select_pdf
+from données_ods_V_3_2 import view_in_doc, select_doc_file
 
 # Fonction pour collecter toutes les balises du dictionnaire donné
 def reusable_balises(balises_par_fichier):
@@ -55,7 +55,6 @@ if __name__ == "__main__":
     # Vérifier si les balises et le mapping sont disponibles
     if balises_par_fichier and mapping:
         date = time_now()
-        print(f"date : {date}")
 
         # Collecter toutes les balises
         gargamel = reusable_balises(balises_par_fichier)
