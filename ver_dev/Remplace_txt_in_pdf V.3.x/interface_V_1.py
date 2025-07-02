@@ -3,10 +3,10 @@ from données_ods_V_3_2 import select_doc_file, view_in_doc
 from balises_pdf_V_3_2 import select_pdf, extract_variables_in_pdf
 from corrélation_pdf_ods_V_3_2 import reusable_balises, search_usable_variables, time_now
 from Replace_txt_in_pdf_V_3_2 import replace_text_in_pdf
-from rapport_V_3_1 import made_in_heaven
+from rapport_V_3_2 import made_in_heaven
 import tkinter as tk
 from tkinter import messagebox
-from PyQt5.QtGui import QCursor
+from PyQt5.QtGui import QCursor,QIcon
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel, QHBoxLayout, QTableWidget, QTableWidgetItem, QSizePolicy, QProgressBar
 
@@ -73,13 +73,20 @@ class MainWindow(QMainWindow):
         self.file_pdf_paths = None
 
         # Création des widgets
-        self.add_ods_button = QPushButton("Ajouter un fichier .ods")
         self.add_pdf_button = QPushButton("Ajouter un ou plusieurs fichiers .pdf")
+        self.add_ods_button = QPushButton("Ajouter le fichier calculateur")
         self.execute_button = QPushButton("Exécuter")
         self.reset = QPushButton("Réinitialiser l'application")
-        self.progress_bar = QProgressBar()
+
+        self.status_ods_label = QLabel("NON OK")
+        self.status_pdf_label = QLabel("NON OK")
+        self.status_execute_label = QLabel("PAS PRÊT")
+        self.status_reset_label = QLabel("")
         self.status_execute_label_info = QLabel("")
+
+        self.progress_bar = QProgressBar()
         self.progress_bar.setAlignment(Qt.AlignCenter)  # Centrer le texte dans la barre de progression
+        self.setWindowIcon(QIcon("C:/Users/SONA/AppData/Roaming/source/DossierScolaire/ver_dev/Remplace_txt_in_pdf V.3.x/1234.ico"))
 
         self.table = QTableWidget()
         self.status_ods_label = QLabel("NON OK")
@@ -121,10 +128,10 @@ class MainWindow(QMainWindow):
 
         # Configuration des colonnes du tableau
         self.table.setColumnCount(2)
-        self.table.setHorizontalHeaderLabels(["Nom fichier", "Information du document"])
+        self.table.setHorizontalHeaderLabels(["Nom fichier", "Rapport du document"])
 
         # Définir la largeur des colonnes et la hauteur des lignes
-        self.table.setColumnWidth(0, 300)  # Largeur de la première colonne
+        self.table.setColumnWidth(0, 280)  # Largeur de la première colonne
         self.table.setColumnWidth(1, 500)  # Largeur de la deuxième colonne
         self.table.verticalHeader().setDefaultSectionSize(40)  # Hauteur des lignes
 
@@ -149,6 +156,7 @@ class MainWindow(QMainWindow):
 
     # Fonction pour ajouter un fichier ODS
     def add_ods_file(self):
+        self.status_ods_label.setText("NON OK")
         self.file_ods_path = select_doc_file()
         if self.file_ods_path:
             self.status_ods_label.setText("OK")
@@ -158,6 +166,7 @@ class MainWindow(QMainWindow):
 
     # Fonction pour ajouter un ou plusieurs fichiers PDF
     def add_pdf_file(self):
+        self.status_pdf_label.setText("NON OK")
         self.file_pdf_paths = select_pdf()
         if self.file_pdf_paths:
             self.status_pdf_label.setText("OK")
@@ -167,20 +176,22 @@ class MainWindow(QMainWindow):
 
     def reset_application(self):
         if not self.status_execute_label.text() == "EN COURS D'EXÉCUTION":
-            # Réinitialiser les variables d'instance
-            self.file_ods_path = None
-            self.file_pdf_paths = None
+            response = messagebox.askquestion("Question", "Êtes-vous sûr de vouloir continuer?")
+            if response == 'yes':
+                # Réinitialiser les variables d'instance
+                self.file_ods_path = None
+                self.file_pdf_paths = None
 
-            # Réinitialiser les labels de statut
-            self.status_ods_label.setText("NON OK")
-            self.status_pdf_label.setText("NON OK")
-            self.status_execute_label.setText("PAS PRÊT")
+                # Réinitialiser les labels de statut
+                self.status_ods_label.setText("NON OK")
+                self.status_pdf_label.setText("NON OK")
+                self.status_execute_label.setText("PAS PRÊT")
 
-            # Réinitialiser la barre de progression
-            self.progress_bar.setValue(0)
+                # Réinitialiser la barre de progression
+                self.progress_bar.setValue(0)
 
-            # Réinitialiser le tableau
-            self.table.setRowCount(0)
+                # Réinitialiser le tableau
+                self.table.setRowCount(0)
         else:
             messagebox.showwarning("Erreur", "Impossible de réinitialiser l'application pendant l'exécution")
 
@@ -197,13 +208,13 @@ class MainWindow(QMainWindow):
             self.worker.finished.connect(self.on_worker_finished)
             self.worker.start()
         elif not self.file_ods_path and not self.file_pdf_paths:
-            messagebox.showwarning("Erreur", "Veuillez ajouter un fichier ODS et un ou plusieurs fichiers PDF avant d'exécuter")
+            messagebox.showwarning("Erreur", "Veuillez ajouter un fichier calculateur et un ou plusieurs fichiers PDF avant d'exécuter")
         elif not self.file_ods_path:
-            messagebox.showwarning("Erreur", "Il vous manque le fichier ODS")
+            messagebox.showwarning("Erreur", "Il vous manque le fichier calculateur")
         elif not self.file_pdf_paths:
             messagebox.showwarning("Erreur", "Il vous manque le ou les fichiers PDF")
         elif self.status_execute_label.text() == "EXÉCUTÉ":
-            response = messagebox.askquestion("Question", "Voulez-vous continuer?")
+            response = messagebox.askquestion("Question", "Êtes-vous sûr de vouloir continuer?")
             if response == 'yes':
                 self.status_execute_label.setText("EN COURS D'EXÉCUTION")
                 self.progress_bar.setValue(0)

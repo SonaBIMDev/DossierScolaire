@@ -7,18 +7,18 @@ from odf.table import Table, TableRow, TableCell
 
 # Fonction pour sélectionner un fichier .ods
 def select_doc_file():
-    print("Veuillez sélectionner un fichier ODS")
+    print("Veuillez sélectionner un fichier calculateur")
     # Afficher une boîte de dialogue d'information
     messagebox.showinfo("Information", "Veuillez vérifier que les informations contenues dans le fichier calculateur soient toujours correctes")
     root = tk.Tk()
     root.withdraw()  # Masquer la fenêtre principale de tkinter
-    # Ouvrir une boîte de dialogue pour sélectionner un fichier ODS
+    # Ouvrir une boîte de dialogue pour sélectionner un fichier calculateur
     file_ods_path = filedialog.askopenfilename(
-        title="Veuillez sélectionner un fichier ODS",
+        title="Veuillez sélectionner un fichier calculateur",
         filetypes=[("Fichier ODS", "*.ods")]
     )
     if file_ods_path:
-        print(f"➔ Chemin du fichier ODS sélectionné : {file_ods_path}")
+        print(f"➔ Chemin du fichier calculateur sélectionné : {file_ods_path}")
     return file_ods_path
 
 # Fonction pour lire les informations sur le fichier .ods
@@ -60,19 +60,19 @@ def view_in_doc(file_ods_path):
                     mapping[variable] = value
         return mapping
     except Exception as e:
-        print(f"❌ Erreur lors de la lecture du fichier ODS : {e}")
+        print(f"❌ Erreur lors de la lecture du fichier calculateur : {e}")
         return {}
 
 # Point d'entrée principal du script
 if __name__ == "__main__":
-    # Sélectionner un fichier ODS
+    # Sélectionner un fichier calculateur
     file_ods_path = select_doc_file()
-    # Lire et afficher le contenu du fichier ODS
+    # Lire et afficher le contenu du fichier calculateur
     mapping = view_in_doc(file_ods_path)
 
     if not file_ods_path:
-        print("❌ Aucun fichier ODS sélectionné")
+        print("❌ Aucun fichier calculateur sélectionné")
     if file_ods_path and mapping:
-        print("🔍 Contenu du fichier ODS :")
+        print("🔍 Contenu du fichier calculateur :")
         for key, value in mapping.items():
             print(f"  - {key} : {value}")
