@@ -1,6 +1,6 @@
-# AutoScolarité
+# DossierScolaire
 
-AutoScolarité est un outil Python permettant de remplir automatiquement l’intégralité d’un dossier contenant des modèles PDF de scolarité d’un élève en remplaçant des balises (placeholders) par les informations réelles de l’élève.
+DossierScolaire est un outil Python permettant de remplir automatiquement l’intégralité d’un dossier contenant des modèles PDF de scolarité d’un élève en remplaçant des balises (placeholders) par les informations réelles de l’élève.
 
 ## Table des matières
 
